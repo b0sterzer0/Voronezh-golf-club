@@ -3,7 +3,7 @@ from flask_login import login_required, logout_user
 
 from golf import app, login_manager
 from golf.models import User
-from golf.utils import login_custom_func
+from golf.utils import login_custom_func, get_events
 
 
 @login_manager.user_loader
@@ -23,7 +23,7 @@ def main_get():
     if request.method == 'POST':
         if not login_custom_func():
             return redirect(url_for('main_get'))
-    return render_template('index.html')
+    return render_template('index.html', events=get_events())
 
 
 @app.route('/events/')

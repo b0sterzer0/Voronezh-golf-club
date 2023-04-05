@@ -38,10 +38,9 @@
 # session.add(test_user)
 # session.commit()
 
-from golf import create_app
+import golf
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
-from flask import current_app
 
 
 db = SQLAlchemy()
@@ -53,6 +52,10 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String, nullable=False)
 
 
-app = create_app()
-with app.app_context():
-    db.create_all()
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String, unique=True, nullable=False)
+    description = db.Column(db.String)
+    date = db.Column(db.Date, nullable=False)
+    location = db.Column(db.String, nullable=False)
+    ticket_price = db.Column(db.Integer, nullable=False)

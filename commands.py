@@ -1,14 +1,12 @@
 import click
 
 import golf
+from golf.models import db
 
 
 @click.command('create_db')
 def create_db():
-    golf.db.create_all()
-    user = golf.User()
-    golf.db.session.add(user)
-    golf.db.session.commit()
+    db.create_all()
 
 
 @click.command('runserver')
