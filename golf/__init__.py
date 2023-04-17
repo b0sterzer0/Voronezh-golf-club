@@ -26,13 +26,15 @@ SECRET_KEY = dotenv_values(ENV_PATH)['SECRET_KEY']
 # app create
 def create_app():
     app = Flask(__name__)
-    app.__static_folder = os.path.join(CURRENT_DIR, 'static')
+    app.static_folder = os.path.join(CURRENT_DIR, 'static')
     app.secret_key = SECRET_KEY
     app.config["SQLALCHEMY_DATABASE_URI"] = f"{USING_DB}+{USING_DIALECT}://{USERNAME}:{DB_PASSWORD}@{HOST}:{PORT}" \
                                             f"/{DB_NAME}"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     from .models import db
     db.init_app(app)
+    with app.app_context():
+        db.create_all()
 
     return app
 

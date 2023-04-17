@@ -30,7 +30,6 @@
 #     def __repr__(self):
 #         return f'User(id={self.id}), account_number={self.account_number}'
 
-
 # Base.metadata.create_all(bind=engine)
 
 # test_user = User(account_number='000000', password=generate_password_hash('12345'))
@@ -38,7 +37,6 @@
 # session.add(test_user)
 # session.commit()
 
-import golf
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 
@@ -46,10 +44,18 @@ from flask_login import UserMixin
 db = SQLAlchemy()
 
 
+class Mail(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    mail = db.Column(db.String, unique=True, nullable=True)
+    user = db.relationship('User', backref='mail')
+    appeal = db.relationship('Appeal', backref='appeal')
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     account_number = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
+    mail_id = db.Column(db.Integer, db.ForeignKey('mail.id'), nullable=True)
 
 
 class Event(db.Model):
@@ -59,3 +65,11 @@ class Event(db.Model):
     date = db.Column(db.Date, nullable=False)
     location = db.Column(db.String, nullable=False)
     ticket_price = db.Column(db.Integer, nullable=False)
+
+
+class Appeal(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=True)
+    mail_id = db.Column(db.Integer, db.ForeignKey('mail.id'))
+    message = db.Column(db.Text)
+    join_to_club = db.Column(db.Boolean, default=False, nullable=False)

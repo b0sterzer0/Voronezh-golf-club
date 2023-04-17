@@ -1,9 +1,9 @@
-from flask import request, render_template, redirect, url_for
+from flask import request, render_template, redirect, url_for, session
 from flask_login import login_required, logout_user
 
 from golf import app, login_manager
 from golf.models import User
-from golf.utils import login_custom_func, get_events
+from golf.utils import login_custom_func, get_events, add_mail, send_appeal
 
 
 @login_manager.user_loader
@@ -15,6 +15,21 @@ def load_user(user_id):
 @login_required
 def logout():
     logout_user()
+    return redirect(url_for('main_get'))
+
+
+@app.route('/add_mail/', methods=['POST'])
+def mail():
+    if add_mail():
+        session['mail_obj'] = True
+        session.modified = True
+    return redirect(url_for('main_get'))
+
+
+@app.route('/join_request/', methods=['POST'])
+@app.route('/appeal/', methods=['POST'])
+def appeal():
+    send_appeal()
     return redirect(url_for('main_get'))
 
 
