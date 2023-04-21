@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Воронежский гольф-клуб</title>
+        <title>{{ club_name }} гольф-клуб</title>
 
         <!-- CSS FILES -->                
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,7 +40,7 @@ https://templatemo.com/tm-587-tiya-golf-club
                     <a class="navbar-brand d-flex align-items-center" href="#">
                         <img src="{{ url_for('static', filename='assets/images/logo.png') }}" class="navbar-brand-image img-fluid" alt="Voronezh Golf Club">
                         <span class="navbar-brand-text">
-                            Воронежский
+                            {{ club_name }}
                             <small>гольф-клуб</small>
                         </span>
                     </a>
@@ -190,7 +190,7 @@ https://templatemo.com/tm-587-tiya-golf-club
 
                         <div class="col-lg-6 col-12">
                             <div class="ratio ratio-16x9">
-                                <iframe width="560" height="315" src="https://www.youtube.com/embed/MGNgbNGOzh8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                <iframe width="560" height="315" src="{{ url_video_on_main_page }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                             </div>
                         </div>
 
@@ -212,9 +212,7 @@ https://templatemo.com/tm-587-tiya-golf-club
                         <div class="col-lg-5 col-12 me-auto mb-4 mb-lg-0">
                             <h3 class="mb-3">Tiya Club History</h3>
 
-                            <p><strong>Since 1984</strong>, Tiya is ranked #8 in the top 10 golf courses in the world. Tiya is Bootstrap 5 HTML CSS template for golf clubs. Anyone can modify and use this layout for commercial purposes.</p>
-
-                            <p>Tiya Golf Club is 100% free CSS template provided by TemplateMo website. Please tell your friends about our website. Thank you for visiting.</p>
+                            <p>{{ club_history }}</p>
                         </div>
 
                         <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0 mb-md-0">
@@ -574,8 +572,7 @@ https://templatemo.com/tm-587-tiya-golf-club
                             <div class="contact-info mt-5">
                                 <div class="contact-info-item">
                                     <div class="contact-info-body">
-                                        <strong>Воронеж, Воронежская область</strong>
-                                        <strong>ул. Вымышленная д.1</strong>
+                                        <strong>{{ city }}, {{ address }}</strong>
 
                                         <p class="mt-2 mb-1">
                                             <a href="#" class="contact-link">
@@ -586,7 +583,7 @@ https://templatemo.com/tm-587-tiya-golf-club
 
                                         <p class="mb-0">
                                             <a href="#" class="contact-link">
-                                                voronezhgolf@mail.ru
+                                                {{ email }}
                                             </a>
                                         </p>
                                     </div>
@@ -613,7 +610,7 @@ https://templatemo.com/tm-587-tiya-golf-club
                         <a class="navbar-brand d-flex align-items-center" href="#">
                             <img src="{{ url_for('static', filename='assets/images/logo.png') }}" class="navbar-brand-image img-fluid" alt="">
                             <span class="navbar-brand-text">
-                                Воронежский
+                                {{ club_name }}
                                 <small>гольф-клуб</small>
                             </span>
                         </a>
@@ -624,12 +621,12 @@ https://templatemo.com/tm-587-tiya-golf-club
 
                         <p class="d-flex border-bottom pb-3 mb-3 me-lg-3">
                             <span>Будни</span>
-                            6:00 AM - 6:00 PM
+                            {{ work_hours_weekdays }}
                         </p>
 
                         <p class="d-flex me-lg-3">
                             <span>Суббота, воскресенье</span>
-                            6:30 AM - 8:30 PM
+                            {{ work_hours_weekend }}
                         </p>
                         <br>
                         <p class="copyright-text">Copyright © 2048 Tiya Golf Club</p>

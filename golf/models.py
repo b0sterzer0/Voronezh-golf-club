@@ -73,3 +73,16 @@ class Appeal(db.Model):
     mail_id = db.Column(db.Integer, db.ForeignKey('mail.id'))
     message = db.Column(db.Text)
     join_to_club = db.Column(db.Boolean, default=False, nullable=False)
+
+
+class SiteData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    club_name = db.Column(db.String)
+    email = db.Column(db.String)
+    phone_number = db.Column(db.String)
+    city = db.Column(db.String)
+    address = db.Column(db.String)
+    club_history = db.Column(db.Text)
+    work_hours_weekdays = db.Column(db.String)
+    work_hours_weekend = db.Column(db.String)
+    url_video_on_main_page = db.Column(db.String)
