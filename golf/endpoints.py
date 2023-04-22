@@ -29,7 +29,7 @@ def load_user(user_id):
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('main_get'))
+    return redirect(url_for('main'))
 
 
 @app.route('/add_mail/', methods=['POST'])
@@ -37,27 +37,29 @@ def mail():
     if add_mail():
         session['mail_obj'] = True
         session.modified = True
-    return redirect(url_for('main_get'))
+    return redirect(url_for('main'))
 
 
 @app.route('/join_request/', methods=['POST'])
 @app.route('/appeal/', methods=['POST'])
 def appeal():
     send_appeal()
-    return redirect(url_for('main_get'))
+    return redirect(url_for('main'))
 
 
 @app.route('/', methods=['GET', 'POST'])
-def main_get():
+def main():
     if request.method == 'POST':
         if not login_custom_func():
-            return redirect(url_for('main_get'))
+            return redirect(url_for('main'))
     return render_template('index.html', events=get_events())
 
 
 @app.route('/events/')
 def events():
-    return render_template('event-listing.html')
+    upcoming_events = get_events()
+    latest_events = upcoming_events[:2]
+    return render_template('event-listing.html', latest_events=latest_events, upcoming_events=upcoming_events)
 
 
 @app.route('/events/detail/')
