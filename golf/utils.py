@@ -74,3 +74,8 @@ def send_appeal():
     appeal = Appeal(join_to_club=check_is_join_req(), **data)
     db.session.add(appeal)
     db.session.commit()
+
+
+def event_detail(event_id):
+    event = db.get_or_404(Event, event_id)
+    return event

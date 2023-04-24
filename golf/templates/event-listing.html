@@ -43,7 +43,7 @@
                         {% for event in latest_events %}
                             <div class="col-lg-6 col-12 mb-5 mb-lg-0">
                                 <div class="custom-block-image-wrap">
-                                    <a href="#">
+                                    <a href="{{ url_for('events_detail', event_id=event.id) }}">
                                         <img src="{{ url_for('static', filename='assets/images/anna-rosar-ew-olGvgCCs-unsplash.jpg') }}" class="custom-block-image img-fluid" alt="">
 
                                         <i class="custom-block-icon bi-link"></i>
@@ -59,7 +59,7 @@
                                 </div>
 
                                 <div class="custom-block-info">
-                                    <a href="#" class="events-title mb-2">{{ event.title }}</a>
+                                    <a href="{{ url_for('events_detail', event_id=event.id) }}" class="events-title mb-2">{{ event.title }}</a>
 
                                     {% if event.description %}
                                         <p class="mb-0">{{ event.description }}</p>
@@ -108,7 +108,7 @@
 
                                 <div class="col-lg-4 col-md-8 col-12 order-1 order-lg-0">
                                     <div class="custom-block-image-wrap">
-                                        <a href="#">
+                                        <a href="{{ url_for('events_detail', event_id=event.id) }}">
                                             <img src="{{ url_for('static', filename='assets/images/professional-golf-player.jpg') }}" class="custom-block-image img-fluid" alt="">
 
                                             <i class="custom-block-icon bi-link"></i>
@@ -118,7 +118,7 @@
 
                                 <div class="col-lg-6 col-12 order-3 order-lg-0">
                                     <div class="custom-block-info mt-2 mt-lg-0">
-                                        <a href="#" class="events-title mb-3">{{ event.title }}</a>
+                                        <a href="{{ url_for('events_detail', event_id=event.id) }}" class="events-title mb-3">{{ event.title }}</a>
 
                                         {% if event.description %}
                                             <p class="mb-0">{{ event.description }}</p>

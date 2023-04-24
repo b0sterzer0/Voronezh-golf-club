@@ -3,7 +3,7 @@ from flask_login import login_required, logout_user
 
 from golf import app, login_manager
 from golf.models import User, SiteData, db
-from golf.utils import login_custom_func, get_events, add_mail, send_appeal
+from golf.utils import login_custom_func, get_events, add_mail, send_appeal, event_detail
 
 
 @app.context_processor
@@ -11,6 +11,7 @@ def get_site_data_context_processor():
     site_data = db.get_or_404(SiteData, 1)
     dict_for_return = {'club_name': site_data.club_name,
                        'email': site_data.email,
+                       'phone_number': site_data.phone_number,
                        'city': site_data.city,
                        'address': site_data.address,
                        'club_history': site_data.club_history,
@@ -62,6 +63,11 @@ def events():
     return render_template('event-listing.html', latest_events=latest_events, upcoming_events=upcoming_events)
 
 
-@app.route('/events/detail/')
-def events_detail():
-    return render_template('event-detail.html')
+@app.route('/events/detail/<event_id>/')
+def events_detail(event_id):
+    return render_template('event-detail.html', event=event_detail(event_id))
+
+
+@app.route('/admin/')
+def admin():
+    return render_template('admin.html')
