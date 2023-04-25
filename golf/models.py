@@ -56,6 +56,7 @@ class User(UserMixin, db.Model):
     account_number = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
     mail_id = db.Column(db.Integer, db.ForeignKey('mail.id'), nullable=True)
+    is_admin = db.Column(db.Boolean)
 
 
 class Event(db.Model):

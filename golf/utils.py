@@ -2,7 +2,7 @@ from flask import request
 from flask_login import login_user, current_user
 from werkzeug.security import check_password_hash
 
-from golf.models import db, User, Event, Mail, Appeal
+from golf.models import db, User, Event, Mail, Appeal, SiteData
 
 
 def login_custom_func():
@@ -79,3 +79,17 @@ def send_appeal():
 def event_detail(event_id):
     event = db.get_or_404(Event, event_id)
     return event
+
+
+def save_settings():
+    settings = db.get_or_404(SiteData, 1)
+    settings.club_name = request.form.get('club-name')
+    settings.email = request.form.get('club-email')
+    settings.phone_number = request.form.get('club-phone')
+    settings.city = request.form.get('club-city')
+    settings.address = request.form.get('club-address')
+    settings.club_history = request.form.get('club-history')
+    settings.work_hours_weekdays = request.form.get('club-work-hours-weekdays')
+    settings.work_hours_weekend = request.form.get('club-work-hours-weekend')
+    settings.url_video_on_main_page = request.form.get('club-preview-video')
+    db.session.commit()

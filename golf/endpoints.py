@@ -1,9 +1,9 @@
 from flask import request, render_template, redirect, url_for, session
-from flask_login import login_required, logout_user
+from flask_login import login_required, logout_user, current_user
 
 from golf import app, login_manager
 from golf.models import User, SiteData, db
-from golf.utils import login_custom_func, get_events, add_mail, send_appeal, event_detail
+from golf.utils import login_custom_func, get_events, add_mail, send_appeal, event_detail, save_settings
 
 
 @app.context_processor
@@ -68,6 +68,11 @@ def events_detail(event_id):
     return render_template('event-detail.html', event=event_detail(event_id))
 
 
-@app.route('/admin/')
-def admin():
-    return render_template('admin.html')
+@app.route('/settings/', methods=['GET', 'POST'])
+def site_settings():
+    if current_user.is_anonymous or not current_user.is_admin:
+        return 'You have no rights', 403
+    if request.method == 'POST':
+        save_settings()
+        return redirect(url_for('site_settings'))
+    return render_template('settings.html')

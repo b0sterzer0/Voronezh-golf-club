@@ -29,6 +29,9 @@
 
             <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
                 <li><a class="dropdown-item" href="{{ url_for('events') }}">Список событий</a></li>
+                {% if current_user.is_admin %}
+                    <li><a class="dropdown-item" href="{{ url_for('site_settings') }}">Настройки сайта</a></li>
+                {% endif %}
             </ul>
         </li>
     </ul>
