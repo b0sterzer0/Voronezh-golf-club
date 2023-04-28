@@ -39,14 +39,6 @@ def check_is_join_req():
     return is_join_req
 
 
-def data_for_appeal_from_auth_user():
-    data = dict()
-    data['name'] = current_user.account_number
-    data['mail_id'] = Mail.query.get(current_user.mail_id).id
-
-    return data
-
-
 def data_for_appeal_from_anonim_user():
     data = dict()
     mail_from_req = request.form.get('email')
@@ -67,13 +59,16 @@ def data_for_appeal_from_anonim_user():
 
 def send_appeal():
     if current_user.is_authenticated:
-        data = data_for_appeal_from_auth_user()
+        mail_id = Mail.query.get(current_user.mail_id).id
+        data = {'name': current_user.account_number, 'mail_id': mail_id}
     else:
         data = data_for_appeal_from_anonim_user()
     data['message'] = request.form.get('message')
     appeal = Appeal(join_to_club=check_is_join_req(), **data)
     db.session.add(appeal)
     db.session.commit()
+
+    return appeal
 
 
 def event_detail(event_id):
