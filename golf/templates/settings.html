@@ -86,4 +86,29 @@
             </form>
         </div>
     </section>
+
+    <section id="create-user">
+        <div class="container">
+            <form action="{{ url_for('create_user') }}" method="post" class="custom-form contact-form" role="form">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-12">
+                        <div class="form-floating">
+                            <input type="text" name="account-number" id="account-number" class="form-control" placeholder="Номер абонемента" required="">
+                            <label for="floatingInput">Номер абонемента</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" name="email" id="user-email" class="form-control" placeholder="Email" required="">
+                            <label for="floatingInput">Email</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" name="user-password" id="user-password" class="form-control" placeholder="Пароль" required="">
+                            <label for="floatingInput">Пароль</label>
+                        </div>
+                        <button type="submit" class="form-control">Зарегистрировать нового пользователя</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
 {% endblock %}

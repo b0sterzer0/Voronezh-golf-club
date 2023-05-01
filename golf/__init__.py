@@ -33,8 +33,8 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     from .models import db
     db.init_app(app)
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
 
     return app
 

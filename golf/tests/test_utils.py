@@ -1,8 +1,8 @@
 import pytest
 
 from conftest import client, app, db
-from golf.utils import get_events, add_mail, check_is_join_req, data_for_appeal_from_anonim_user, send_appeal
-from golf.models import Mail
+from golf.utils import get_events, add_mail, check_is_join_req, data_for_appeal_from_anonim_user, send_appeal, new_user
+from golf.models import Mail, User
 
 
 def test_get_events_func(client):
@@ -55,3 +55,14 @@ def test_send_appeal(client):
         db.session.commit()
 
     assert appeal
+
+
+def test_new_user(client):
+    with app.test_request_context('/create_user/', method='POST',
+                                  data={'account-number': 'test', 'email': 'test@test.ru', 'password': 'testtesttest'}):
+        new_user()
+        user = User.query.filter_by(account_number='test')
+        db.session.delete(user)
+        db.session.commit()
+
+    assert user

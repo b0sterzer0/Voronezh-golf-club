@@ -1,6 +1,6 @@
 from flask import request
 from flask_login import login_user, current_user
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from golf.models import db, User, Event, Mail, Appeal, SiteData
 
@@ -87,4 +87,23 @@ def save_settings():
     settings.work_hours_weekdays = request.form.get('club-work-hours-weekdays')
     settings.work_hours_weekend = request.form.get('club-work-hours-weekend')
     settings.url_video_on_main_page = request.form.get('club-preview-video')
+    db.session.commit()
+
+
+def new_user():
+    mail_obj_list = Mail.query.filter_by(mail=request.form.get('email')).all()
+    if not mail_obj_list:
+        mail_obj = Mail(mail=request.form.get('email'))
+        db.session.add(mail_obj)
+        db.session.commit()
+    else:
+        mail_obj = mail_obj_list[0]
+    data = {
+        'account_number': request.form.get('account-number'),
+        'mail_id': mail_obj.id,
+        'password': generate_password_hash(request.form.get('user-password')),
+        'is_admin': False
+    }
+    user = User(**data)
+    db.session.add(user)
     db.session.commit()
