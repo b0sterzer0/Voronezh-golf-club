@@ -107,3 +107,17 @@ def new_user():
     user = User(**data)
     db.session.add(user)
     db.session.commit()
+
+
+def new_event():
+    data = {
+        'title': request.form.get('event-title'),
+        'description': request.form.get('event-description'),
+        'date': request.form.get('event-date'),
+        'location': request.form.get('event-location'),
+        'ticket_price': request.form.get('event-price')
+    }
+
+    event = Event(**data)
+    db.session.add(event)
+    db.session.commit()

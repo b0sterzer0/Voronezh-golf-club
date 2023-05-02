@@ -1,8 +1,11 @@
+from datetime import date
+
 import pytest
 
 from conftest import client, app, db
-from golf.utils import get_events, add_mail, check_is_join_req, data_for_appeal_from_anonim_user, send_appeal, new_user
-from golf.models import Mail, User
+from golf.utils import get_events, add_mail, check_is_join_req, data_for_appeal_from_anonim_user, send_appeal,\
+    new_user, new_event
+from golf.models import Mail, User, Event
 
 
 def test_get_events_func(client):
@@ -58,11 +61,26 @@ def test_send_appeal(client):
 
 
 def test_new_user(client):
-    with app.test_request_context('/create_user/', method='POST',
-                                  data={'account-number': 'test', 'email': 'test@test.ru', 'password': 'testtesttest'}):
+    with app.test_request_context('/create_user/', method='POST', data={'account-number': 'test',
+                                                                        'email': 'test@test.ru',
+                                                                        'user-password': 'testtesttest'}):
         new_user()
-        user = User.query.filter_by(account_number='test')
+        user = User.query.filter_by(account_number='test').first()
         db.session.delete(user)
         db.session.commit()
 
     assert user
+
+
+def test_new_event(client):
+    with app.test_request_context('/create_user/', method='POST', data={'event-title': 'test',
+                                                                        'event-description': 'test desc',
+                                                                        'event-date': date.today(),
+                                                                        'event-location': 'test loc',
+                                                                        'event-price': 1000}):
+        new_event()
+        event = Event.query.filter_by(title='test').first()
+        db.session.delete(event)
+        db.session.commit()
+
+    assert event

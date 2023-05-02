@@ -41,3 +41,21 @@ def test_url_add_mail(client):
     response = client.post('/add_mail/', data={'email': 'test@test.ru'})
 
     assert response.status == '302 FOUND'
+
+
+def test_admin_url(client):
+    response = client.get('/admin/')
+
+    assert response.status == '200 OK'
+
+
+def test_new_user_url(client):
+    response = client.get('/admin/create_user/')
+
+    assert response.status == '302 FOUND'
+
+
+def test_new_event_url(client):
+    response = client.get('/admin/create_event/')
+
+    assert response.status == '302 FOUND'

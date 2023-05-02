@@ -3,7 +3,8 @@ from flask_login import login_required, logout_user, current_user
 
 from golf import app, login_manager
 from golf.models import User, SiteData, db
-from golf.utils import login_custom_func, get_events, add_mail, send_appeal, event_detail, save_settings, new_user
+from golf.utils import login_custom_func, get_events, add_mail, send_appeal, event_detail, save_settings, new_user, \
+    new_event
 
 
 @app.context_processor
@@ -78,7 +79,22 @@ def site_settings():
     return render_template('settings.html')
 
 
-@app.route('/create_user/', methods=['POST'])
+@app.route('/admin/', methods=['GET'])
+def admin():
+    return render_template('admin.html')
+
+
+@app.route('/admin/create_user/', methods=['GET', 'POST'])
 def create_user():
-    new_user()
+    if request.method == 'POST':
+        new_user()
+        return redirect(url_for('site_settings'))
+    return redirect(url_for('site_settings'))
+
+
+@app.route('/admin/create_event/', methods=['GET', 'POST'])
+def create_event():
+    if request.method == 'POST':
+        new_event()
+        return redirect(url_for('site_settings'))
     return redirect(url_for('site_settings'))

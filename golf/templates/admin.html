@@ -11,7 +11,7 @@
 
             <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
                 <li><a class="dropdown-item" href="{{ url_for('events') }}">Список событий</a></li>
-                <li><a class="dropdown-item" href="{{ url_for('admin') }}">Административный раздел</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('site_settings') }}">Настройки сайта</a></li>
             </ul>
         </li>
     </ul>
@@ -24,68 +24,68 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-12">
-                    <h1 class="text-white mb-4 pb-2">Настройки сайта</h1>
+                    <h1 class="text-white mb-4 pb-2">Административный раздел</h1>
                 </div>
             </div>
         </div>
         <svg viewBox="0 0 1962 178" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#ffffff" d="M 0 114 C 118.5 114 118.5 167 237 167 L 237 167 L 237 0 L 0 0 Z" stroke-width="0"></path> <path fill="#ffffff" d="M 236 167 C 373 167 373 128 510 128 L 510 128 L 510 0 L 236 0 Z" stroke-width="0"></path> <path fill="#ffffff" d="M 509 128 C 607 128 607 153 705 153 L 705 153 L 705 0 L 509 0 Z" stroke-width="0"></path><path fill="#ffffff" d="M 704 153 C 812 153 812 113 920 113 L 920 113 L 920 0 L 704 0 Z" stroke-width="0"></path><path fill="#ffffff" d="M 919 113 C 1048.5 113 1048.5 148 1178 148 L 1178 148 L 1178 0 L 919 0 Z" stroke-width="0"></path><path fill="#ffffff" d="M 1177 148 C 1359.5 148 1359.5 129 1542 129 L 1542 129 L 1542 0 L 1177 0 Z" stroke-width="0"></path><path fill="#ffffff" d="M 1541 129 C 1751.5 129 1751.5 138 1962 138 L 1962 138 L 1962 0 L 1541 0 Z" stroke-width="0"></path></svg>
     </section>
 
-    <section class="events-section events-detail-section section-padding" id="section_2">
+    <section id="create-user">
         <div class="container">
-            <form action="{{ url_for('site_settings') }}" method="post" class="custom-form contact-form" role="form">
-
+            <form action="{{ url_for('create_user') }}" method="post" class="custom-form contact-form" role="form">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-12">
                         <div class="form-floating">
-                            <input type="text" name="club-name" id="club-name" class="form-control" placeholder="Название клуба" required="" value="{{ club_name }}">
-                            <label for="floatingInput">Название клуба</label>
+                            <input type="text" name="account-number" id="account-number" class="form-control" placeholder="Номер абонемента" required="">
+                            <label for="floatingInput">Номер абонемента</label>
                         </div>
-
                         <div class="form-floating">
-                            <input type="email" name="club-email" id="club-email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email" required="" value="{{ email }}">
-                            <label for="floatingInput">Электронная почта</label>
+                            <input type="text" name="email" id="user-email" class="form-control" placeholder="Email" required="">
+                            <label for="floatingInput">Email</label>
                         </div>
-
                         <div class="form-floating">
-                            <input type="text" name="club-phone" id="club-phone" class="form-control" placeholder="Номер телефона" required="" value="{{ phone_number }}">
-                            <label for="floatingInput">Номер телефона</label>
+                            <input type="text" name="user-password" id="user-password" class="form-control" placeholder="Пароль" required="">
+                            <label for="floatingInput">Пароль</label>
                         </div>
-
-                        <div class="form-floating">
-                            <input type="text" name="club-city" id="club-city" class="form-control" placeholder="Город" required="" value="{{ city }}">
-                            <label for="floatingInput">Город</label>
-                        </div>
-
-                        <div class="form-floating">
-                            <input type="text" name="club-address" id="club-address" class="form-control" placeholder="Адрес" required="" value="{{ address }}">
-                            <label for="floatingInput">Адрес</label>
-                        </div>
-
-                        <div class="form-floating">
-                            <input type="text" name="club-work-hours-weekdays" id="club-work-hours-weekdays" class="form-control" placeholder="Рабочие часы будни" required="" value="{{ work_hours_weekdays }}">
-                            <label for="floatingInput">Рабочие часы в будни</label>
-                        </div>
-
-                        <div class="form-floating">
-                            <input type="text" name="club-work-hours-weekend" id="club-work-hours-weekend" class="form-control" placeholder="Рабочие часы выходные" required="" value="{{ work_hours_weekend }}">
-                            <label for="floatingInput">Рабочие часы в выходные</label>
-                        </div>
-
-                        <div class="form-floating">
-                            <input type="url" name="club-preview-video" id="club-preview-video" class="form-control" placeholder="Превью" required="" value="{{ url_video_on_main_page }}">
-                            <label for="floatingInput">Ссылка на видео-превью</label>
-                        </div>
-
-                        <div class="form-floating">
-                            <textarea class="form-control" id="club-history" name="club-history" placeholder="История клуба">{{ club_history }}</textarea>
-                            <label for="floatingTextarea">История клуба</label>
-                        </div>
-                        <button type="submit" class="form-control">Сохранить</button>
+                        <button type="submit" class="form-control">Зарегистрировать нового пользователя</button>
                     </div>
                 </div>
             </form>
         </div>
     </section>
+    <p></p>
+    <section id="create-event">
+        <div class="container">
+            <form action="{{ url_for('create_event') }}" method="post" class="custom-form contact-form" role="form">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-12">
+                        <div class="form-floating">
+                            <input type="text" name="event-title" id="event-title" class="form-control" placeholder="Название события" required="">
+                            <label for="floatingInput">Название события</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="date" name="event-date" id="event-date" class="form-control" placeholder="Дата" required="">
+                            <label for="floatingInput">Дата</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" name="event-location" id="event-location" class="form-control" placeholder="Место проведения" required="">
+                            <label for="floatingInput">Место проведения</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" name="event-price" id="event-price" class="form-control" placeholder="Стоимость участия" required="">
+                            <label for="floatingInput">Стоимость участия</label>
+                        </div>
+                        <div class="form-floating">
+                            <textarea class="form-control" id="event-description" name="event-description" placeholder="Описание события"></textarea>
+                            <label for="floatingTextarea">Описание события</label>
+                        </div>
+                        <button type="submit" class="form-control">Создать событие</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    <p></p>
 
 {% endblock %}
