@@ -20,15 +20,62 @@ def get_events():
     return events
 
 
+def get_one_event(event_id):
+    return db.get_or_404(Event, event_id)
+
+
+def get_users():
+    users = User.query.filter_by(is_admin=False).all()
+    return users
+
+
+def get_one_user_with_email(user_id):
+    user = db.get_or_404(User, user_id)
+    email = db.get_or_404(Mail, user.mail_id)
+    return user, email.mail
+
+
+def delete_user_util(user_id):
+    user, email = get_one_user_with_email(user_id)
+    db.session.delete(user)
+    db.session.commit()
+
+
+def delete_event_util(event_id):
+    event = get_one_event(event_id)
+    db.session.delete(event)
+    db.session.commit()
+
+
 def add_mail():
-    user_mail = request.form['email']
+    user_mail = request.form.get('email')
     if user_mail:
         mail_in_db = Mail.query.filter_by(mail=user_mail).all()
         if not mail_in_db:
             mail_obj = Mail(mail=user_mail)
             db.session.add(mail_obj)
             db.session.commit()
-        return True
+            return mail_obj.id
+        return mail_in_db[0].id
+
+
+def edit_user_util(user_id):
+    user, email = get_one_user_with_email(user_id)
+    user.account_number = request.form.get('account-number')
+    user.mail_id = add_mail()
+    if request.form.get('user-password'):
+        user.password = generate_password_hash(request.form.get('user-password'))
+    db.session.commit()
+
+
+def edit_event_util(event_id):
+    event = get_one_event(event_id)
+    event.title = request.form.get('event-title')
+    event.description = request.form.get('event-description')
+    event.date = request.form.get('event-date')
+    event.location = request.form.get('event-location')
+    event.ticket_price = request.form.get('event-price')
+    db.session.commit()
 
 
 def check_is_join_req():

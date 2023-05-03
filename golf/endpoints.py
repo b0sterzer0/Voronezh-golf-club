@@ -4,7 +4,8 @@ from flask_login import login_required, logout_user, current_user
 from golf import app, login_manager
 from golf.models import User, SiteData, db
 from golf.utils import login_custom_func, get_events, add_mail, send_appeal, event_detail, save_settings, new_user, \
-    new_event
+    new_event, get_users, delete_user_util, edit_user_util, get_one_user_with_email, delete_event_util, \
+    edit_event_util, get_one_event
 
 
 @app.context_processor
@@ -81,20 +82,52 @@ def site_settings():
 
 @app.route('/admin/', methods=['GET'])
 def admin():
-    return render_template('admin.html')
+    users = get_users()
+    club_events = get_events()
+    return render_template('admin.html', users=users, events=club_events)
 
 
 @app.route('/admin/create_user/', methods=['GET', 'POST'])
-def create_user():
+def admin_user():
     if request.method == 'POST':
         new_user()
-        return redirect(url_for('site_settings'))
-    return redirect(url_for('site_settings'))
+        return redirect(url_for('admin'))
+    return render_template('admin-user.html')
+
+
+@app.route('/admin/delete_user/<user_id>/')
+def delete_user(user_id):
+    delete_user_util(user_id=user_id)
+    return redirect(url_for('admin'))
+
+
+@app.route('/admin/edit_user/<user_id>/', methods=['GET', 'POST'])
+def edit_user(user_id):
+    if request.method == 'POST':
+        edit_user_util(user_id=user_id)
+        return redirect(url_for('admin'))
+    user, email = get_one_user_with_email(user_id)
+    return render_template('admin-user.html', user=user, email=email)
 
 
 @app.route('/admin/create_event/', methods=['GET', 'POST'])
-def create_event():
+def admin_events():
     if request.method == 'POST':
         new_event()
-        return redirect(url_for('site_settings'))
-    return redirect(url_for('site_settings'))
+        return redirect(url_for('admin'))
+    return render_template('admin-events.html')
+
+
+@app.route('/admin/delete_event/<event_id>/')
+def delete_event(event_id):
+    delete_event_util(event_id)
+    return redirect(url_for('admin'))
+
+
+@app.route('/admin/edit_event/<event_id>/', methods=['GET', 'POST'])
+def edit_event(event_id):
+    if request.method == 'POST':
+        edit_event_util(event_id)
+        return redirect(url_for('admin'))
+    event = get_one_event(event_id)
+    return render_template('admin-events.html', event=event)

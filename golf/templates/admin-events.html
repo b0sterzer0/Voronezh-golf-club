@@ -1,0 +1,97 @@
+{% extends 'base/base.html' %}
+
+{% block navbar %}
+    <ul class="navbar-nav ms-lg-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('main') }}">Главная</a>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Страницы</a>
+
+            <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
+                <li><a class="dropdown-item" href="{{ url_for('events') }}">Список событий</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('site_settings') }}">Настройки сайта</a></li>
+            </ul>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <section class="hero-section hero-50 d-flex justify-content-center align-items-center" id="section_1">
+        <div class="section-overlay"></div>
+        <svg viewBox="0 0 1962 178" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#3D405B" d="M 0 114 C 118.5 114 118.5 167 237 167 L 237 167 L 237 0 L 0 0 Z" stroke-width="0"></path> <path fill="#3D405B" d="M 236 167 C 373 167 373 128 510 128 L 510 128 L 510 0 L 236 0 Z" stroke-width="0"></path> <path fill="#3D405B" d="M 509 128 C 607 128 607 153 705 153 L 705 153 L 705 0 L 509 0 Z" stroke-width="0"></path><path fill="#3D405B" d="M 704 153 C 812 153 812 113 920 113 L 920 113 L 920 0 L 704 0 Z" stroke-width="0"></path><path fill="#3D405B" d="M 919 113 C 1048.5 113 1048.5 148 1178 148 L 1178 148 L 1178 0 L 919 0 Z" stroke-width="0"></path><path fill="#3D405B" d="M 1177 148 C 1359.5 148 1359.5 129 1542 129 L 1542 129 L 1542 0 L 1177 0 Z" stroke-width="0"></path><path fill="#3D405B" d="M 1541 129 C 1751.5 129 1751.5 138 1962 138 L 1962 138 L 1962 0 L 1541 0 Z" stroke-width="0"></path></svg>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-12">
+                    <h1 class="text-white mb-4 pb-2">Создание или редактирование события</h1>
+                </div>
+            </div>
+        </div>
+        <svg viewBox="0 0 1962 178" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#ffffff" d="M 0 114 C 118.5 114 118.5 167 237 167 L 237 167 L 237 0 L 0 0 Z" stroke-width="0"></path> <path fill="#ffffff" d="M 236 167 C 373 167 373 128 510 128 L 510 128 L 510 0 L 236 0 Z" stroke-width="0"></path> <path fill="#ffffff" d="M 509 128 C 607 128 607 153 705 153 L 705 153 L 705 0 L 509 0 Z" stroke-width="0"></path><path fill="#ffffff" d="M 704 153 C 812 153 812 113 920 113 L 920 113 L 920 0 L 704 0 Z" stroke-width="0"></path><path fill="#ffffff" d="M 919 113 C 1048.5 113 1048.5 148 1178 148 L 1178 148 L 1178 0 L 919 0 Z" stroke-width="0"></path><path fill="#ffffff" d="M 1177 148 C 1359.5 148 1359.5 129 1542 129 L 1542 129 L 1542 0 L 1177 0 Z" stroke-width="0"></path><path fill="#ffffff" d="M 1541 129 C 1751.5 129 1751.5 138 1962 138 L 1962 138 L 1962 0 L 1541 0 Z" stroke-width="0"></path></svg>
+    </section>
+
+    <section class="events-section events-detail-section section-padding" id="create-event">
+        <div class="container">
+            {% if event %}
+                <form action="{{ url_for('edit_event', event_id=event.id) }}" method="post" class="custom-form contact-form" role="form">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <div class="form-floating">
+                                <input type="text" name="event-title" id="event-title" class="form-control" placeholder="Название события" required="" value="{{ event.title }}">
+                                <label for="floatingInput">Название события</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="date" name="event-date" id="event-date" class="form-control" placeholder="Дата" required="" value="{{ event.date }}">
+                                <label for="floatingInput">Дата</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="text" name="event-location" id="event-location" class="form-control" placeholder="Место проведения" required="" value="{{ event.location }}">
+                                <label for="floatingInput">Место проведения</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="text" name="event-price" id="event-price" class="form-control" placeholder="Стоимость участия" required="" value="{{ event.ticket_price }}">
+                                <label for="floatingInput">Стоимость участия</label>
+                            </div>
+                            <div class="form-floating">
+                                <textarea class="form-control" id="event-description" name="event-description" placeholder="Описание события">{{ event.description }}</textarea>
+                                <label for="floatingTextarea">Описание события</label>
+                            </div>
+                            <button type="submit" class="form-control">Сохранить</button>
+                        </div>
+                    </div>
+                </form>
+
+            {% else %}
+                <form action="{{ url_for('admin_events') }}" method="post" class="custom-form contact-form" role="form">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <div class="form-floating">
+                                <input type="text" name="event-title" id="event-title" class="form-control" placeholder="Название события" required="">
+                                <label for="floatingInput">Название события</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="date" name="event-date" id="event-date" class="form-control" placeholder="Дата" required="">
+                                <label for="floatingInput">Дата</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="text" name="event-location" id="event-location" class="form-control" placeholder="Место проведения" required="">
+                                <label for="floatingInput">Место проведения</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="text" name="event-price" id="event-price" class="form-control" placeholder="Стоимость участия" required="">
+                                <label for="floatingInput">Стоимость участия</label>
+                            </div>
+                            <div class="form-floating">
+                                <textarea class="form-control" id="event-description" name="event-description" placeholder="Описание события"></textarea>
+                                <label for="floatingTextarea">Описание события</label>
+                            </div>
+                            <button type="submit" class="form-control">Создать событие</button>
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    </section>
+
+{% endblock %}

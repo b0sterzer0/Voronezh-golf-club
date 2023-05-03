@@ -52,7 +52,7 @@ def test_admin_url(client):
 def test_new_user_url(client):
     response = client.get('/admin/create_user/')
 
-    assert response.status == '302 FOUND'
+    assert response.status == '200 OK'
 
 
 def test_new_event_url(client):
