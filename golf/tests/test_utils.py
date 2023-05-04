@@ -4,7 +4,7 @@ import pytest
 
 from conftest import client, app, db
 from golf.utils import get_events, add_mail, check_is_join_req, data_for_appeal_from_anonim_user, send_appeal,\
-    new_user, new_event
+    new_user, new_event, edit_user_util, edit_event_util, delete_user_util, delete_event_util
 from golf.models import Mail, User, Event
 
 
@@ -66,21 +66,61 @@ def test_new_user(client):
                                                                         'user-password': 'testtesttest'}):
         new_user()
         user = User.query.filter_by(account_number='test').first()
-        db.session.delete(user)
-        db.session.commit()
 
     assert user
 
 
+def test_edit_user_util(client):
+    with app.test_request_context('/create_user/', method='POST', data={'account-number': 'test',
+                                                                        'email': 'testtesttest@gmail.com',
+                                                                        'user-password': 'testtesttest'}):
+
+        user = User.query.filter_by(account_number='test').first()
+        edit_user_util(user.id)
+        user = User.query.filter_by(account_number='test').first()
+        mail_id = Mail.query.filter_by(mail='testtesttest@gmail.com').first().id
+
+    assert user.mail_id == mail_id
+
+
+def test_delete_user_util(client):
+    with app.test_request_context():
+        user = User.query.filter_by(account_number='test').first()
+        delete_user_util(user.id)
+        user = User.query.filter_by(account_number='test').first()
+
+    assert not user
+
+
 def test_new_event(client):
-    with app.test_request_context('/create_user/', method='POST', data={'event-title': 'test',
-                                                                        'event-description': 'test desc',
-                                                                        'event-date': date.today(),
-                                                                        'event-location': 'test loc',
-                                                                        'event-price': 1000}):
+    with app.test_request_context('/create_event/', method='POST', data={'event-title': 'test',
+                                                                         'event-description': 'test desc',
+                                                                         'event-date': date.today(),
+                                                                         'event-location': 'test loc',
+                                                                         'event-price': 1000}):
         new_event()
         event = Event.query.filter_by(title='test').first()
-        db.session.delete(event)
-        db.session.commit()
 
     assert event
+
+
+def test_edit_event_util(client):
+    with app.test_request_context('/create_event/', method='POST', data={'event-title': 'test',
+                                                                         'event-description': 'test desc',
+                                                                         'event-date': date.today(),
+                                                                         'event-location': 'test loc',
+                                                                         'event-price': 2000}):
+        event = Event.query.filter_by(title='test').first()
+        edit_event_util(event.id)
+        event = Event.query.filter_by(title='test').first()
+
+    assert event.ticket_price == 2000
+
+
+def test_delete_event_util(client):
+    with app.test_request_context():
+        event = Event.query.filter_by(title='test').first()
+        delete_event_util(event.id)
+        event = Event.query.filter_by(title='test').first()
+
+    assert not event

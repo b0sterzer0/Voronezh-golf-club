@@ -1,6 +1,11 @@
+from datetime import date
+
 import pytest
 
 from conftest import client
+
+from conftest import db, app
+from golf.models import User, Event
 
 
 def test_url_main_page(client):
@@ -49,13 +54,50 @@ def test_admin_url(client):
     assert response.status == '200 OK'
 
 
-def test_new_user_url(client):
-    response = client.get('/admin/create_user/')
+@pytest.mark.usefixtures('authenticated_request')
+def test_admin_user_url(client):
+    with app.test_request_context():
+        response = client.post('/admin/create_user/', data={'account-number': 'test', 'email': 'test@test.ru',
+                                                            'user-password': '12345'})
+
+    assert response.status == '302 FOUND'
+
+
+def test_edit_user_url(client):
+    response = client.get('/admin/edit_user/1/')
 
     assert response.status == '200 OK'
 
 
-def test_new_event_url(client):
-    response = client.get('/admin/create_event/')
+@pytest.mark.usefixtures('authenticated_request')
+def test_delete_user_url(client):
+    with app.test_request_context():
+        user = User.query.filter_by(account_number='test').first()
+        response = client.get(f'/admin/delete_user/{ user.id }/')
+
+    assert response.status == '302 FOUND'
+
+
+@pytest.mark.usefixtures('authenticated_request')
+def test_admin_events_url(client):
+    with app.test_request_context():
+        response = client.post('/admin/create_event/', data={'event-title': 'new test', 'event-date': date.today(),
+                                                             'event-location': 'test loc', 'event-price': 1000,
+                                                             'event-description': 'test desc'})
+
+    assert response.status == '302 FOUND'
+
+
+def test_edit_event_url(client):
+    response = client.get('/admin/edit_event/1/')
+
+    assert response.status == '200 OK'
+
+
+@pytest.mark.usefixtures('authenticated_request')
+def test_delete_event_url(client):
+    with app.test_request_context():
+        event = Event.query.filter_by(title='new test').first()
+        response = client.get(f'/admin/delete_event/{ event.id}/')
 
     assert response.status == '302 FOUND'

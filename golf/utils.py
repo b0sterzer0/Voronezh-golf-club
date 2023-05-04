@@ -106,7 +106,7 @@ def data_for_appeal_from_anonim_user():
 
 def send_appeal():
     if current_user.is_authenticated:
-        mail_id = Mail.query.get(current_user.mail_id).id
+        mail_id = db.get_or_404(Mail, current_user.mail_id).id
         data = {'name': current_user.account_number, 'mail_id': mail_id}
     else:
         data = data_for_appeal_from_anonim_user()
@@ -138,16 +138,10 @@ def save_settings():
 
 
 def new_user():
-    mail_obj_list = Mail.query.filter_by(mail=request.form.get('email')).all()
-    if not mail_obj_list:
-        mail_obj = Mail(mail=request.form.get('email'))
-        db.session.add(mail_obj)
-        db.session.commit()
-    else:
-        mail_obj = mail_obj_list[0]
+    mail_id = add_mail()
     data = {
         'account_number': request.form.get('account-number'),
-        'mail_id': mail_obj.id,
+        'mail_id': mail_id,
         'password': generate_password_hash(request.form.get('user-password')),
         'is_admin': False
     }
