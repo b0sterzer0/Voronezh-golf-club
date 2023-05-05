@@ -1,3 +1,5 @@
+from typing import Union
+
 from flask import request, render_template, redirect, url_for, session
 from flask_login import login_required, logout_user, current_user
 
@@ -9,7 +11,10 @@ from golf.utils import login_custom_func, get_events, add_mail, send_appeal, eve
 
 
 @app.context_processor
-def get_site_data_context_processor():
+def get_site_data_context_processor() -> dict:
+    """
+    Контекст-процессор для передачи данных сайта в шаблоны
+    """
     site_data = db.get_or_404(SiteData, 1)
     dict_for_return = {'club_name': site_data.club_name,
                        'email': site_data.email,
@@ -24,7 +29,7 @@ def get_site_data_context_processor():
 
 
 @login_manager.user_loader
-def load_user(user_id):
+def load_user(user_id: int):
     return User.query.get(int(user_id))
 
 
@@ -37,6 +42,9 @@ def logout():
 
 @app.route('/add_mail/', methods=['POST'])
 def mail():
+    """
+    Запоминает в сессии email, если пользователь авторизовался или иным способом передал свою почту
+    """
     if add_mail():
         session['mail_obj'] = True
         session.modified = True
@@ -45,13 +53,16 @@ def mail():
 
 @app.route('/join_request/', methods=['POST'])
 @app.route('/appeal/', methods=['POST'])
-def appeal():
+def appeal() -> redirect:
+    """
+    Эндпоинт для обработки сообщений пользователя (запрос на вступление в клуб или обращение)
+    """
     send_appeal()
     return redirect(url_for('main'))
 
 
 @app.route('/', methods=['GET', 'POST'])
-def main():
+def main() -> Union[redirect, render_template]:
     if request.method == 'POST':
         if not login_custom_func():
             return redirect(url_for('main'))
@@ -59,19 +70,28 @@ def main():
 
 
 @app.route('/events/')
-def events():
+def events() -> render_template:
+    """
+    Собирает данные для страницы событий клуба и выводит ее
+    """
     upcoming_events = get_events()
     latest_events = upcoming_events[:2]
     return render_template('event-listing.html', latest_events=latest_events, upcoming_events=upcoming_events)
 
 
 @app.route('/events/detail/<event_id>/')
-def events_detail(event_id):
+def events_detail(event_id: int) -> render_template:
+    """
+    Собирает данные для страницы детального просмотра события и выводит ее
+    """
     return render_template('event-detail.html', event=event_detail(event_id))
 
 
 @app.route('/settings/', methods=['GET', 'POST'])
-def site_settings():
+def site_settings() -> Union[str, redirect, render_template]:
+    """
+    Реализует вывод данных сайта и их изменение
+    """
     if current_user.is_anonymous or not current_user.is_admin:
         return 'You have no rights', 403
     if request.method == 'POST':
@@ -81,14 +101,21 @@ def site_settings():
 
 
 @app.route('/admin/', methods=['GET'])
-def admin():
+def admin() -> render_template:
+    """
+    Выводит страницу административного раздела с данными из БД (административный раздел)
+    :return:
+    """
     users = get_users()
     club_events = get_events()
     return render_template('admin.html', users=users, events=club_events)
 
 
 @app.route('/admin/create_user/', methods=['GET', 'POST'])
-def admin_user():
+def admin_user() -> Union[redirect, render_template]:
+    """
+    Реализует вывод формы для создания пользователя и его сохранение в БД (административный раздел)
+    """
     if request.method == 'POST':
         new_user()
         return redirect(url_for('admin'))
@@ -96,13 +123,19 @@ def admin_user():
 
 
 @app.route('/admin/delete_user/<user_id>/')
-def delete_user(user_id):
+def delete_user(user_id: int) -> redirect:
+    """
+    Реализует удаление пользователя (административный раздел)
+    """
     delete_user_util(user_id=user_id)
     return redirect(url_for('admin'))
 
 
 @app.route('/admin/edit_user/<user_id>/', methods=['GET', 'POST'])
-def edit_user(user_id):
+def edit_user(user_id: int) -> Union[redirect, render_template]:
+    """
+    Реализует вывод формы с данными пользователя для изменения (административный раздел)
+    """
     if request.method == 'POST':
         edit_user_util(user_id=user_id)
         return redirect(url_for('admin'))
@@ -111,7 +144,11 @@ def edit_user(user_id):
 
 
 @app.route('/admin/create_event/', methods=['GET', 'POST'])
-def admin_events():
+def admin_events() -> Union[redirect, render_template]:
+    """
+    Реализует вывод формы для создания нового события и его сохранение в БД (административный раздел)
+    :return:
+    """
     if request.method == 'POST':
         new_event()
         return redirect(url_for('admin'))
@@ -119,13 +156,19 @@ def admin_events():
 
 
 @app.route('/admin/delete_event/<event_id>/')
-def delete_event(event_id):
+def delete_event(event_id: int) -> redirect:
+    """
+    Реализует удаление события (административный раздел)
+    """
     delete_event_util(event_id)
     return redirect(url_for('admin'))
 
 
 @app.route('/admin/edit_event/<event_id>/', methods=['GET', 'POST'])
-def edit_event(event_id):
+def edit_event(event_id: int) -> Union[redirect, render_template]:
+    """
+    Реализует вывод формы с данными события для изменения (административный раздел)
+    """
     if request.method == 'POST':
         edit_event_util(event_id)
         return redirect(url_for('admin'))

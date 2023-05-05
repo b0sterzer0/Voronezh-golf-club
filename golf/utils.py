@@ -1,3 +1,5 @@
+from typing import Union
+
 from flask import request
 from flask_login import login_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -35,19 +37,28 @@ def get_one_user_with_email(user_id):
     return user, email.mail
 
 
-def delete_user_util(user_id):
+def delete_user_util(user_id: int):
+    """
+    Удаляет пользователя
+    """
     user, email = get_one_user_with_email(user_id)
     db.session.delete(user)
     db.session.commit()
 
 
-def delete_event_util(event_id):
+def delete_event_util(event_id: int):
+    """
+    Удаляет событие
+    """
     event = get_one_event(event_id)
     db.session.delete(event)
     db.session.commit()
 
 
 def add_mail():
+    """
+    Получает из формы email, находить в БД и возвращает его id. Если email не в БД - создает
+    """
     user_mail = request.form.get('email')
     if user_mail:
         mail_in_db = Mail.query.filter_by(mail=user_mail).all()
@@ -59,7 +70,10 @@ def add_mail():
         return mail_in_db[0].id
 
 
-def edit_user_util(user_id):
+def edit_user_util(user_id: int):
+    """
+    Используя полученные данные из формы, изменяет пользователя в БД (административный раздел)
+    """
     user, email = get_one_user_with_email(user_id)
     user.account_number = request.form.get('account-number')
     user.mail_id = add_mail()
@@ -68,7 +82,10 @@ def edit_user_util(user_id):
     db.session.commit()
 
 
-def edit_event_util(event_id):
+def edit_event_util(event_id: int):
+    """
+    Используя полученные данные из формы, изменяет событие в БД (административный раздел)
+    """
     event = get_one_event(event_id)
     event.title = request.form.get('event-title')
     event.description = request.form.get('event-description')
@@ -79,6 +96,9 @@ def edit_event_util(event_id):
 
 
 def check_is_join_req():
+    """
+    Проверяет, является ли обращение пользователем заявкой на вступление в клуб
+    """
     is_join_req = False
     if request.path == '/join_request/':
         is_join_req = True
@@ -87,6 +107,9 @@ def check_is_join_req():
 
 
 def data_for_appeal_from_anonim_user():
+    """
+    Собирает данные из формы обращения анонимного пользователя
+    """
     data = dict()
     mail_from_req = request.form.get('email')
     mail_obj_list = Mail.query.filter_by(mail=mail_from_req).all()
@@ -105,6 +128,9 @@ def data_for_appeal_from_anonim_user():
 
 
 def send_appeal():
+    """
+    Сохраняет обращение пользователя в БД
+    """
     if current_user.is_authenticated:
         mail_id = db.get_or_404(Mail, current_user.mail_id).id
         data = {'name': current_user.account_number, 'mail_id': mail_id}
@@ -118,12 +144,15 @@ def send_appeal():
     return appeal
 
 
-def event_detail(event_id):
+def event_detail(event_id: int):
     event = db.get_or_404(Event, event_id)
     return event
 
 
 def save_settings():
+    """
+    Используя полученные из формы данные, обновляет настройки сайта
+    """
     settings = db.get_or_404(SiteData, 1)
     settings.club_name = request.form.get('club-name')
     settings.email = request.form.get('club-email')
@@ -138,6 +167,9 @@ def save_settings():
 
 
 def new_user():
+    """
+    Создает нового пользователя (административный раздел)
+    """
     mail_id = add_mail()
     data = {
         'account_number': request.form.get('account-number'),
@@ -151,6 +183,9 @@ def new_user():
 
 
 def new_event():
+    """
+    Создает новое событие (административный раздел)
+    """
     data = {
         'title': request.form.get('event-title'),
         'description': request.form.get('event-description'),
