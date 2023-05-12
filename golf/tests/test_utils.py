@@ -2,7 +2,7 @@ from datetime import date
 
 import pytest
 
-from conftest import client, app, db
+from conftest import client, app, db # noqa F401
 from golf.utils import get_events, add_mail, check_is_join_req, data_for_appeal_from_anonim_user, send_appeal,\
     new_user, new_event, edit_user_util, edit_event_util, delete_user_util, delete_event_util
 from golf.models import Mail, User, Event

@@ -2,9 +2,9 @@ from datetime import date
 
 import pytest
 
-from conftest import client
+from conftest import client # noqa F401
 
-from conftest import db, app
+from conftest import app
 from golf.models import User, Event
 
 

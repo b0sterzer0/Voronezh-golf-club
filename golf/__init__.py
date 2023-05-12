@@ -31,10 +31,10 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = f"{USING_DB}+{USING_DIALECT}://{USERNAME}:{DB_PASSWORD}@{HOST}:{PORT}" \
                                             f"/{DB_NAME}"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-    from .models import db
+    from .models import db # noqa F811
     db.init_app(app)
-    # with app.app_context():
-    #     db.create_all()
+    with app.app_context():
+        db.create_all()
 
     return app
 
@@ -45,4 +45,4 @@ app = create_app()
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-from .main import *
+from golf.main import db # noqa F811, F401, E402

@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from golf.models import db, User, Event, Mail, Appeal, SiteData
 
 
-def login_custom_func():
+def login_custom_func() -> Union[None, User]:
     account_number = request.form.get('member-login-number')
     password = request.form.get('member-login-password')
     user = User.query.filter_by(account_number=account_number).first()
@@ -17,27 +17,27 @@ def login_custom_func():
         return user
 
 
-def get_events():
+def get_events() -> Event:
     events = Event.query.order_by(Event.date).all()
     return events
 
 
-def get_one_event(event_id):
+def get_one_event(event_id) -> Event:
     return db.get_or_404(Event, event_id)
 
 
-def get_users():
+def get_users() -> User:
     users = User.query.filter_by(is_admin=False).all()
     return users
 
 
-def get_one_user_with_email(user_id):
+def get_one_user_with_email(user_id: int) -> User:
     user = db.get_or_404(User, user_id)
     email = db.get_or_404(Mail, user.mail_id)
     return user, email.mail
 
 
-def delete_user_util(user_id: int):
+def delete_user_util(user_id: int) -> None:
     """
     Удаляет пользователя
     """
@@ -46,7 +46,7 @@ def delete_user_util(user_id: int):
     db.session.commit()
 
 
-def delete_event_util(event_id: int):
+def delete_event_util(event_id: int) -> None:
     """
     Удаляет событие
     """
@@ -55,7 +55,7 @@ def delete_event_util(event_id: int):
     db.session.commit()
 
 
-def add_mail():
+def add_mail() -> int:
     """
     Получает из формы email, находить в БД и возвращает его id. Если email не в БД - создает
     """
@@ -70,7 +70,7 @@ def add_mail():
         return mail_in_db[0].id
 
 
-def edit_user_util(user_id: int):
+def edit_user_util(user_id: int) -> None:
     """
     Используя полученные данные из формы, изменяет пользователя в БД (административный раздел)
     """
@@ -82,7 +82,7 @@ def edit_user_util(user_id: int):
     db.session.commit()
 
 
-def edit_event_util(event_id: int):
+def edit_event_util(event_id: int) -> None:
     """
     Используя полученные данные из формы, изменяет событие в БД (административный раздел)
     """
@@ -95,7 +95,7 @@ def edit_event_util(event_id: int):
     db.session.commit()
 
 
-def check_is_join_req():
+def check_is_join_req() -> bool:
     """
     Проверяет, является ли обращение пользователем заявкой на вступление в клуб
     """
@@ -106,7 +106,7 @@ def check_is_join_req():
     return is_join_req
 
 
-def data_for_appeal_from_anonim_user():
+def data_for_appeal_from_anonim_user() -> dict:
     """
     Собирает данные из формы обращения анонимного пользователя
     """
@@ -127,7 +127,7 @@ def data_for_appeal_from_anonim_user():
     return data
 
 
-def send_appeal():
+def send_appeal() -> Appeal:
     """
     Сохраняет обращение пользователя в БД
     """
@@ -144,12 +144,12 @@ def send_appeal():
     return appeal
 
 
-def event_detail(event_id: int):
+def event_detail(event_id: int) -> Event:
     event = db.get_or_404(Event, event_id)
     return event
 
 
-def save_settings():
+def save_settings() -> None:
     """
     Используя полученные из формы данные, обновляет настройки сайта
     """
@@ -166,7 +166,7 @@ def save_settings():
     db.session.commit()
 
 
-def new_user():
+def new_user() -> None:
     """
     Создает нового пользователя (административный раздел)
     """
@@ -182,7 +182,7 @@ def new_user():
     db.session.commit()
 
 
-def new_event():
+def new_event() -> None:
     """
     Создает новое событие (административный раздел)
     """
